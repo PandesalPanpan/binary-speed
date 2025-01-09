@@ -1,0 +1,12 @@
+<!-- Based from CS50 Finance PSET -->
+{% extends "layout.html" %}
+
+{% block title %}
+    Apology
+{% endblock %}
+
+{% block content %}
+    <!-- https://memegen.link/ -->
+    <!-- https://knowyourmeme.com/memes/grumpy-cat -->
+    <img alt="{{ top }}" class="border img-fluid" src="https://api.memegen.link/images/glasses/{{ top | urlencode }}/{{ bottom | urlencode }}?format=jpg&token=eoirezftz5fa7wq99rvp&width=400&height=400" title="{{ top }}">
+{% endblock %}
