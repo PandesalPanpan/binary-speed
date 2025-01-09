@@ -10,9 +10,9 @@ db = SQLAlchemy(app)
 
 @app.route("/")
 def play():
-    return render_template("index.html")
+    return render_template("play.html")
 
 @app.route('/leaderboard')
 def leaderboard():
-    return render_template("index.html")
+    return render_template("leaderboard.html")
 
