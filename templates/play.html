@@ -3,6 +3,13 @@
 {% block title %}Play{% endblock %}
 
 {% block content %}
-<h1>Welcome to My CS50 Final Project</h1>
-<p>This is the content of the index page.</p>
+{% if not session.get('username') %}
+    <form action="set_username" method="post">
+        <input type="text" name="username" placeholder="Enter your name" required>
+        <button type="submit">Start</button>
+    </form>
+{% else %}
+    <h2>Welcome, {{ session['username'] }}!</h2>
+    <a href="{{ url_for('start_game') }}">Play Now</a>
+{% endif %}
 {% endblock %}
