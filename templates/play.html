@@ -10,6 +10,6 @@
     </form>
 {% else %}
     <h2>Welcome, {{ session['username'] }}!</h2>
-    <a href="{{ url_for('start_game') }}">Play Now</a>
+    <a href="{{ url_for('set_username') }}">Play Now</a>
 {% endif %}
 {% endblock %}

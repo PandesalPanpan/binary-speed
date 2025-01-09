@@ -1,5 +1,6 @@
 from flask import Flask, render_template, session, url_for, request, redirect
 from flask_sqlalchemy import SQLAlchemy
+from flask_session import Session
 
 from helpers import apology
 
@@ -9,6 +10,7 @@ app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///binary_speed.db'
 app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_PERMANENT'] = True
+Session(app)
 db = SQLAlchemy(app)
 
 @app.after_request
