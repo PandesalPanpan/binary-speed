@@ -1,10 +1,18 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, url_for
+from flask_sqlalchemy import SQLAlchemy
 
 app = Flask(__name__)
 
+# Database
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///binary_speed.db'
+app.config['SESSION_TYPE'] = 'filesystem'
+db = SQLAlchemy(app)
+
 @app.route("/")
-def index():
+def play():
     return render_template("index.html")
 
-if __name__ == "__main__":
-    app.run(debug=True)
+@app.route('/leaderboard')
+def leaderboard():
+    return render_template("index.html")
+
