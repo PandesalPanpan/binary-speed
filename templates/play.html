@@ -18,6 +18,8 @@
         <p id="question"></p>
         <input type="text" id="answer" placeholder="Your answer">
         <button id="submit-answer">Submit</button>
+        <p id="timer">Time Left: <span id="time-left">10</span> seconds</p>
+        <p id="points">Points: <span id="points-value">0</span></p>
     </div>
     <div id="result-container" style="margin-top: 20px; display: none;">
         <p id="result-message"></p>
@@ -28,34 +30,56 @@
         document.addEventListener('DOMContentLoaded', () => {
             let questions = [];
             let currentQuestionIndex = 0;
+            let timerInterval;
+            let points = 0;
             const questionContainer = document.getElementById('question-container');
             const questionElement = document.getElementById('question');
             const resultContainer = document.getElementById('result-container');
-            
+            const startGameButton = document.getElementById('start-game');
+            const loading = document.getElementById('loading');
+            const submitAnswerButton = document.getElementById('submit-answer');
+            const timeLeftSpan = document.getElementById('time-left');
+            const pointsValueSpan = document.getElementById('points-value');
+
             const showNextQuestion = () => {
                 if (currentQuestionIndex < questions.length) {
-                    
-
                     questionContainer.style.display = 'block';
                     resultContainer.style.display = 'none';
                     // Probably the most necessary code in here as it changes the question
                     questionElement.textContent = `${currentQuestionIndex}. What is the hexadecimal equivalent of ${questions[currentQuestionIndex]}?`;
+                    clearInterval(timerInterval);
+                    startTimer();
                 } else {
-                    alert("END GAME")
+                    questionContainer.style.display = 'none';
+
+                    alert("Game Over! Your Total Points: ", points);
                     //endGame();
                 }
             };
 
+            function startTimer() {
+                let timeLeft = 10;
+                timeLeftSpan.textContent = timeLeft;
+                timerInterval = setInterval(() => {
+                    console.log('Time Left: ', timeLeft)
+                    timeLeft--;
+                    timeLeftSpan.textContent = timeLeft;
+                    if (timeLeft <= 0) {
+                        clearInterval(timerInterval);
+                        console.log("Time Left is 0 or less");
+                        showNextQuestion();
+                    }
+                }, 1000);
+            }
+
             // Start Game Logic
-            const startGameButton = document.getElementById('start-game');
-            const loadingDiv = document.getElementById('loading');
             if (startGameButton) {
                 startGameButton.addEventListener('click', () => {
                     
                     const welcomeDiv = document.getElementById('welcome-div');
                     welcomeDiv.style.visibility = 'hidden';
                     welcomeDiv.style.height = '0';
-                    loadingDiv.style.display = 'block';
+                    loading.style.display = 'block';
                     
                     fetch('/start_game')
                         .then(response => response.json())
@@ -63,16 +87,13 @@
                             questions = data;
                             currentQuestionIndex = 0;
                             // Simulate a delay to see loading
-                            setTimeout(() => {
-                                loadingDiv.style.display = 'none';
-                                showNextQuestion();
-                            }, 2000);
+                            loading.style.display = 'none';
+                            showNextQuestion();
                         })
                 });
             }
 
             // Submit Answer
-            const submitAnswerButton = document.getElementById('submit-answer');
             if (submitAnswerButton) {
                 submitAnswerButton.addEventListener('click', () => {
                     const userAnswer = document.getElementById('answer').value.toUpperCase().trim();
@@ -82,6 +103,11 @@
                     // Animation Examples (Especially "tada" and "pulse" https://mdbootstrap.com/docs/standard/content-styles/animations/
                     if(userAnswer === correctAnswer) {
                         // TODO: Make it dopamine inducing! If possible with sounds and animation effects
+                        clearInterval(timerInterval);
+                        const remainingTime = parseInt(timeLeftSpan.textContent)
+
+                        points += remainingTime * 100; 
+                        pointsValueSpan.textContent = points;
                         alert('Correct!');
                     } else {
                         alert(`Wrong! The correnct answer was ${correctAnswer}.`);
