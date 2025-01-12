@@ -8,10 +8,6 @@ body {
 .navbar {
     background-color: #34495e;
 }
-.navbar-brand {
-    font-size: 1.5rem;
-    font-weight: bold;
-}
 .nav-link {
     transition: all 0.3s ease;
     color: inherit;
