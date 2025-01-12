@@ -9,7 +9,7 @@
         <button type="submit">Enter</button>
     </form>
 {% else %}
-    <div class="d-flex flex-column justify-content-center">
+    <div id="welcome-div" class="d-flex flex-column justify-content-center">
         <h2>Welcome, {{ session['username'] }}!</h2>
         <button id="start-game" class="btn btn-danger">Start Game</button>
     </div>
@@ -49,6 +49,9 @@
             const startGameButton = document.getElementById('start-game');
             if (startGameButton) {
                 startGameButton.addEventListener('click', () => {
+                    const welcomeDiv = document.getElementById('welcome-div');
+                    welcomeDiv.style.visibility = 'hidden';
+                    welcomeDiv.style.height = '0';
                     fetch('/start_game')
                         .then(response => response.json())
                         .then(data => {
