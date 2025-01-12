@@ -6,10 +6,83 @@
 {% if not session.get('username') %}
     <form action="set_username" method="post">
         <input type="text" name="username" placeholder="Enter your name" required>
-        <button type="submit">Start</button>
+        <button type="submit">Enter</button>
     </form>
 {% else %}
-    <h2>Welcome, {{ session['username'] }}!</h2>
-    <a href="{{ url_for('set_username') }}">Play Now</a>
+    <div class="d-flex flex-column justify-content-center">
+        <h2>Welcome, {{ session['username'] }}!</h2>
+        <button id="start-game" class="btn btn-danger">Start Game</button>
+    </div>
+    <div id="question-container" style="margin-top: 20px; display: none;">
+        <p id="question"></p>
+        <input type="text" id="answer" placeholder="Your answer">
+        <button id="submit-answer">Submit</button>
+    </div>
+    <div id="result-container" style="margin-top: 20px; display: none;">
+        <p id="result-message"></p>
+        <button id="play-again">Play Again</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            let questions = [];
+            let currentQuestionIndex = 0;
+            const questionContainer = document.getElementById('question-container');
+            const questionElement = document.getElementById('question');
+            const resultContainer = document.getElementById('result-container');
+            
+            const showNextQuestion = () => {
+                if (currentQuestionIndex < questions.length) {
+                    
+
+                    questionContainer.style.display = 'block';
+                    resultContainer.style.display = 'none';
+                    // Probably the most necessary code in here as it changes the question
+                    questionElement.textContent = `${currentQuestionIndex}. What is the hexadecimal equivalent of ${questions[currentQuestionIndex]}?`;
+                } else {
+                    alert("END GAME")
+                    //endGame();
+                }
+            };
+
+            // Start Game Logic
+            const startGameButton = document.getElementById('start-game');
+            if (startGameButton) {
+                startGameButton.addEventListener('click', () => {
+                    fetch('/start_game')
+                        .then(response => response.json())
+                        .then(data => {
+                            questions = data;
+                            currentQuestionIndex = 0;
+                            showNextQuestion();
+                        })
+                });
+            }
+
+            // Submit Answer
+            const submitAnswerButton = document.getElementById('submit-answer');
+            if (submitAnswerButton) {
+                submitAnswerButton.addEventListener('click', () => {
+                    const userAnswer = document.getElementById('answer').value.toUpperCase().trim();
+                    const currentQuestion = questions[currentQuestionIndex];
+                    const correctAnswer = parseInt(currentQuestion, 2).toString(16).toUpperCase();
+
+                    // Animation Examples (Especially "tada" and "pulse" https://mdbootstrap.com/docs/standard/content-styles/animations/
+                    if(userAnswer === correctAnswer) {
+                        // TODO: Make it dopamine inducing! If possible with sounds and animation effects
+                        alert('Correct!');
+                    } else {
+                        alert(`Wrong! The correnct answer was ${correctAnswer}.`);
+                    }
+
+                    answerInput = document.getElementById('answer');
+                    answerInput.value = '';
+                    answerInput.focus();
+                    currentQuestionIndex++;
+                    showNextQuestion();
+                });
+            }
+        });
+    </script>
 {% endif %}
 {% endblock %}

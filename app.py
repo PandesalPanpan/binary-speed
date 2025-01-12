@@ -1,6 +1,7 @@
-from flask import Flask, render_template, session, url_for, request, redirect
+from flask import Flask, render_template, session, url_for, request, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
+import random
 
 from helpers import apology
 
@@ -29,10 +30,6 @@ def play():
 def leaderboard():
     return render_template("leaderboard.html")
 
-@app.route('/play_now')
-def play_now():
-    return apology("TODO")
-
 @app.route('/set_username', methods=['POST'])
 def set_username():
     # Check if user has form username
@@ -41,4 +38,11 @@ def set_username():
     session['username'] = username
     return redirect('/')
     
+@app.route('/start_game')
+def start_game():
+    questions = [f"{i:04b}" for i in range(16)]
+    
+    random.shuffle(questions)
+    
+    return jsonify(questions)
 
