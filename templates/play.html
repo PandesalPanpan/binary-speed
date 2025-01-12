@@ -43,6 +43,7 @@
             const submitAnswerButton = document.getElementById('submit-answer');
             const timeLeftSpan = document.getElementById('time-left');
             const pointsValueSpan = document.getElementById('points-value');
+            const answerInput = document.getElementById('answer');
 
             const showNextQuestion = () => {
                 if (currentQuestionIndex < questions.length) {
@@ -55,7 +56,7 @@
                     questionContainer.style.display = 'none';
                     stopTimer();
                     alert("Game Over! Your Total Points: ", points);
-                    //endGame();
+                    //endGame(); TODO
                 }
             };
 
@@ -67,10 +68,10 @@
 
             function updateTimer() {
                 const elapsed = performance.now() - startTime;
-                const timeLeft = Math.max(0, (duration - elapsed) / 1000).toFixed(2);
+                const timeLeft = Math.max(0, (duration - elapsed) / 1000).toFixed(1);
                 timeLeftSpan.textContent = timeLeft;
 
-                if (elapsed < duration) {
+                if (elapsed < duration && !timerStop) {
                     timerInterval = requestAnimationFrame(updateTimer);
                 } else if (!timerStop){
                     submitAnswerButton.click();
@@ -122,13 +123,21 @@
                         alert(`Wrong! The correnct answer was ${correctAnswer}.`);
                     }
 
-                    answerInput = document.getElementById('answer');
                     answerInput.value = '';
                     answerInput.focus();
                     currentQuestionIndex++;
                     showNextQuestion();
                 });
             }
+
+            // Since pressing enter doesn't trigger the answer button I added a listener
+            answerInput.addEventListener('keydown', (event) => {
+                if (event.key === 'Enter') {
+                    event.preventDefault();
+                    console.log("Enter Key Pressed");
+                    submitAnswerButton.click();
+                }
+            })
         });
     </script>
 {% endif %}
