@@ -13,6 +13,7 @@
         <h2>Welcome, {{ session['username'] }}!</h2>
         <button id="start-game" class="btn btn-danger">Start Game</button>
     </div>
+    <div id="loading" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
     <div id="question-container" style="margin-top: 20px; display: none;">
         <p id="question"></p>
         <input type="text" id="answer" placeholder="Your answer">
@@ -47,17 +48,25 @@
 
             // Start Game Logic
             const startGameButton = document.getElementById('start-game');
+            const loadingDiv = document.getElementById('loading');
             if (startGameButton) {
                 startGameButton.addEventListener('click', () => {
+                    
                     const welcomeDiv = document.getElementById('welcome-div');
                     welcomeDiv.style.visibility = 'hidden';
                     welcomeDiv.style.height = '0';
+                    loadingDiv.style.display = 'block';
+                    
                     fetch('/start_game')
                         .then(response => response.json())
                         .then(data => {
                             questions = data;
                             currentQuestionIndex = 0;
-                            showNextQuestion();
+                            // Simulate a delay to see loading
+                            setTimeout(() => {
+                                loadingDiv.style.display = 'none';
+                                showNextQuestion();
+                            }, 2000);
                         })
                 });
             }
