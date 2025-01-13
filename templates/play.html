@@ -92,15 +92,7 @@
                     welcomeDiv.style.height = '0';
                     loading.style.display = 'block';
                     
-                    fetch('/start_game')
-                        .then(response => response.json())
-                        .then(data => {
-                            questions = data;
-                            currentQuestionIndex = 0;
-                            // Simulate a delay to see loading
-                            loading.style.display = 'none';
-                            showNextQuestion();
-                        })
+                    startGame();
                 });
             }
 
@@ -144,13 +136,39 @@
                 }
             });
 
+            function startGame() {
+                fetch('/start_game')
+                        .then(response => response.json())
+                        .then(data => {
+                            questions = data;
+                            currentQuestionIndex = 0;
+                            loading.style.display = 'none';
+                            showNextQuestion();
+                        });
+            }
+
             function endGame() {
                 stopTimer();
                 questionContainer.style.display = 'none';
                 resultContainer.style.display = 'block';
                 resultMessage.textContent = `Game Over! Your Total Points: ${points}. You got ${correctAnswers}/${questions.length} correct.`;
-                console.log("Points: ", points);
-                alert("Game Over! Your Total Points: ", points);
+            }
+
+            if (playAgainButton) {
+                playAgainButton.addEventListener('click', () => {
+                    playAgain();
+                });
+            }
+
+            function playAgain() {
+                currentQuestionIndex = 0;
+                points = 0;
+                correctAnswers = 0;
+                pointsValueSpan.textContent = points;
+                answerInput.value = '';
+                resultContainer.style.display = 'none';
+                questionContainer.style.display = 'block';
+                startGame();
             }
         });
     </script>
