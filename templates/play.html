@@ -116,7 +116,12 @@
                         // TODO: Make it dopamine inducing! If possible with sounds and animation effects
                         const elapsed = performance.now() - startTime;
                         const remainingTime = Math.max(0, (duration - elapsed) / 1000).toFixed(2);
-                        points += remainingTime * 100; 
+                        
+                        if (elapsed <= 2000) {
+                            points += 1000;
+                        } else {
+                            points += remainingTime * 100; 
+                        }
                         pointsValueSpan.textContent = points;
                         alert('Correct!');
                     } else {
@@ -137,7 +142,7 @@
                     console.log("Enter Key Pressed");
                     submitAnswerButton.click();
                 }
-            })
+            });
         });
     </script>
 {% endif %}
