@@ -91,3 +91,22 @@ footer {
   }
 }
 
+.large-text {
+  font-size: 2rem;
+}
+.large-input {
+  font-size: 1.5rem;
+  padding: 1rem;
+  max-width: 200px;
+  text-align: center;
+}
+@media (max-width: 576px) {
+  .large-text {
+    font-size: 1.5rem;
+  }
+  .large-input {
+    font-size: 1.2rem;
+    padding: 0.75rem;
+    max-width: 100%;
+  }
+}

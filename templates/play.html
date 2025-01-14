@@ -14,15 +14,17 @@
         <button id="start-game" class="btn btn-danger">Start Game</button>
     </div>
     <div id="loading" class="lds-ellipsis"><div></div><div></div><div></div><div></div></div>
-    <div id="question-container" style="margin-top: 20px; display: none;">
+    <div id="question-container" class="large-text text-center" style="margin-top: 20px; display: none;">
         <p id="question"></p>
-        <input type="text" id="answer" placeholder="Your answer">
-        <button id="submit-answer">Submit</button>
-        <p id="timer">Time Left: <span id="time-left">10.000</span> seconds</p>
+        <p id="binary-question" class=" text-center"></p>
+        <!-- TODO: Set placeholder to 0-F -->
+        <input type="text" id="answer" class="form-control large-input mx-auto" placeholder="Your answer">
+        <button id="submit-answer" class="btn btn-primary mt-3 ">Enter</button>
+        <p id="timer" class="mt-3">Time Left: <span id="time-left">10.000</span> seconds</p>
         <p id="points">Points: <span id="points-value">0</span></p>
     </div>
     <div id="result-container" class="text-center" style="margin-top: 20px; display: none;">
-        <p id="result-message"></p>
+        <p id="result-message" class="large-text"></p>
         <button class="btn btn-primary mx-auto" id="play-again">Play Again</button>
     </div>
 
@@ -38,6 +40,7 @@
 
             const questionContainer = document.getElementById('question-container');
             const questionElement = document.getElementById('question');
+            const binaryQuestion = document.getElementById('binary-question');
             const resultContainer = document.getElementById('result-container');
             const startGameButton = document.getElementById('start-game');
             const loading = document.getElementById('loading');
@@ -50,11 +53,15 @@
 
             const showNextQuestion = () => {
                 if (currentQuestionIndex < questions.length) {
+                    
                     questionContainer.style.display = 'block';
                     resultContainer.style.display = 'none';
                     // Probably the most necessary code in here as it changes the question
-                    questionElement.textContent = `${currentQuestionIndex}. What is the hexadecimal equivalent of ${questions[currentQuestionIndex]}?`;
+                    questionElement.textContent = `${currentQuestionIndex}. What is the hexadecimal equivalent of`;
+                    binaryQuestion.textContent = `${questions[currentQuestionIndex]}?`;
+                    answerInput.value = '';
                     startTimer();
+                    answerInput.focus();
                 } else {
                     endGame();
                 }
@@ -121,8 +128,6 @@
                         alert(`Wrong! The correnct answer was ${correctAnswer}.`);
                     }
 
-                    answerInput.value = '';
-                    answerInput.focus();
                     currentQuestionIndex++;
                     showNextQuestion();
                 });
