@@ -4,9 +4,11 @@
 
 {% block content %}
 {% if not session.get('username') %}
-    <form action="set_username" method="post">
-        <input type="text" name="username" placeholder="Enter your name" required>
-        <button type="submit">Enter</button>
+    <form action="set_username" method="post" class="form-inline mt-3 large-input">
+        <div class="form-group d-flex flex-column justify-content-center">
+            <input type="text" name="username" placeholder="Username" required class="form-group mx-sm-1 mb-2 text-center">
+            <button type="submit" class="btn btn-primary mt-3 mb-2">Enter username</button>
+        </div>        
     </form>
 {% else %}
     <div id="welcome-div" class="d-flex flex-column justify-content-center">
@@ -27,154 +29,6 @@
         <button class="btn btn-primary mx-auto" id="play-again">Play Again</button>
     </div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            let questions = [];
-            let currentQuestionIndex = 0;
-            let timerInterval;
-            let duration = 10 * 1000;
-            let timerStop = false;
-            let correctAnswers = 0;
-            let points = 0;
-
-            const questionContainer = document.getElementById('question-container');
-            const questionElement = document.getElementById('question');
-            const binaryQuestion = document.getElementById('binary-question');
-            const resultContainer = document.getElementById('result-container');
-            const startGameButton = document.getElementById('start-game');
-            const loading = document.getElementById('loading');
-            const submitAnswerButton = document.getElementById('submit-answer');
-            const timeLeftSpan = document.getElementById('time-left');
-            const pointsValueSpan = document.getElementById('points-value');
-            const answerInput = document.getElementById('answer');
-            const resultMessage = document.getElementById('result-message');
-            const playAgainButton = document.getElementById('play-again');
-
-            const showNextQuestion = () => {
-                if (currentQuestionIndex < questions.length) {
-                    
-                    questionContainer.style.display = 'block';
-                    resultContainer.style.display = 'none';
-                    // Probably the most necessary code in here as it changes the question
-                    questionElement.textContent = `${currentQuestionIndex}. What is the hexadecimal equivalent of`;
-                    binaryQuestion.textContent = `${questions[currentQuestionIndex]}?`;
-                    answerInput.value = '';
-                    startTimer();
-                    answerInput.focus();
-                } else {
-                    endGame();
-                }
-            };
-
-            function startTimer() {
-                timerStop = false;
-                startTime = performance.now();
-                updateTimer();
-            }
-
-            function updateTimer() {
-                const elapsed = performance.now() - startTime;
-                const timeLeft = Math.max(0, (duration - elapsed) / 1000).toFixed(1);
-                timeLeftSpan.textContent = timeLeft;
-
-                if (elapsed < duration && !timerStop) {
-                    timerInterval = requestAnimationFrame(updateTimer);
-                } else if (!timerStop){
-                    submitAnswerButton.click();
-                }
-            }
-
-            function stopTimer() {
-                timerStop = true;
-                cancelAnimationFrame(timerInterval); // Just to be safe if its still counting
-            }
-
-            // Start Game Logic
-            if (startGameButton) {
-                startGameButton.addEventListener('click', () => {
-                    
-                    const welcomeDiv = document.getElementById('welcome-div');
-                    welcomeDiv.style.visibility = 'hidden';
-                    welcomeDiv.style.height = '0';
-                    loading.style.display = 'block';
-                    
-                    startGame();
-                });
-            }
-
-            // Submit Answer
-            if (submitAnswerButton) {
-                submitAnswerButton.addEventListener('click', () => {
-                    const userAnswer = document.getElementById('answer').value.toUpperCase().trim();
-                    const currentQuestion = questions[currentQuestionIndex];
-                    const correctAnswer = parseInt(currentQuestion, 2).toString(16).toUpperCase();
-
-                    // Animation Examples (Especially "tada" and "pulse" https://mdbootstrap.com/docs/standard/content-styles/animations/
-                    if(userAnswer === correctAnswer) {
-                        // TODO: Make it dopamine inducing! If possible with sounds and animation effects
-                        const elapsed = performance.now() - startTime;
-                        const remainingTime = Math.max(0, (duration - elapsed) / 1000).toFixed(2);
-                        
-                        if (elapsed <= 2000) {
-                            points += 1000;
-                        } else {
-                            points += remainingTime * 100; 
-                        }
-                        pointsValueSpan.textContent = points;
-                        correctAnswers++;
-                        alert('Correct!');
-                    } else {
-                        alert(`Wrong! The correnct answer was ${correctAnswer}.`);
-                    }
-
-                    currentQuestionIndex++;
-                    showNextQuestion();
-                });
-            }
-
-            // Since pressing enter doesn't trigger the answer button I added a listener
-            answerInput.addEventListener('keydown', (event) => {
-                if (event.key === 'Enter') {
-                    event.preventDefault();
-                    submitAnswerButton.click();
-                }
-            });
-
-            function startGame() {
-                fetch('/start_game')
-                        .then(response => response.json())
-                        .then(data => {
-                            questions = data;
-                            currentQuestionIndex = 0;
-                            loading.style.display = 'none';
-                            showNextQuestion();
-                        });
-            }
-
-            function endGame() {
-                stopTimer();
-                questionContainer.style.display = 'none';
-                resultContainer.style.display = 'block';
-                resultMessage.textContent = `Game Over! Your Total Points: ${points}. You got ${correctAnswers}/${questions.length} correct.`;
-            }
-
-            if (playAgainButton) {
-                playAgainButton.addEventListener('click', () => {
-                    playAgain();
-                });
-            }
-
-            function playAgain() {
-                currentQuestionIndex = 0;
-                points = 0;
-                correctAnswers = 0;
-                pointsValueSpan.textContent = points;
-                answerInput.value = '';
-                resultContainer.style.display = 'none';
-                questionContainer.style.display = 'block';
-                startGame();
-            }
-        });
-    </script>
+    <script src="{{ url_for('static', filename='js/play.js') }}"></script>
 {% endif %}
 {% endblock %}
