@@ -92,9 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
                 pointsValueSpan.textContent = points;
                 correctAnswers++;
-                alert('Correct!');
+                showFeedback(true);
             } else {
-                alert(`Wrong! The correnct answer was ${correctAnswer}.`);
+                showFeedback(false);
             }
 
             currentQuestionIndex++;
@@ -143,5 +143,19 @@ document.addEventListener('DOMContentLoaded', () => {
         resultContainer.style.display = 'none';
         questionContainer.style.display = 'block';
         startGame();
+    }
+
+    function showFeedback(isCorrect) {
+        if (isCorrect) {
+            answerInput.classList.add('bounce', 'correct-focus');
+            setTimeout(() => {
+                answerInput.classList.remove('bounce', 'correct-focus');
+            }, 1000);
+        } else {
+            answerInput.classList.add('shake', 'wrong-focus');
+            setTimeout(() => {
+                answerInput.classList.remove('shake', 'wrong-focus');
+            }, 500);
+        }
     }
 });
