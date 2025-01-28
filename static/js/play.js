@@ -19,6 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const answerInput = document.getElementById('answer');
     const resultMessage = document.getElementById('result-message');
     const playAgainButton = document.getElementById('play-again');
+    const correctAnswerDisplay = document.getElementById('correct-answer-display');
 
     const showNextQuestion = () => {
         if (currentQuestionIndex < questions.length) {
@@ -94,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 correctAnswers++;
                 showFeedback(true);
             } else {
-                showFeedback(false);
+                showFeedback(false, correctAnswer);
             }
 
             currentQuestionIndex++;
@@ -145,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
         startGame();
     }
 
-    function showFeedback(isCorrect) {
+    function showFeedback(isCorrect, correctAnswer = '') {
         if (isCorrect) {
             answerInput.classList.add('bounce', 'correct-focus');
             setTimeout(() => {
@@ -153,9 +154,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }, 1000);
         } else {
             answerInput.classList.add('shake', 'wrong-focus');
+            correctAnswerDisplay.textContent = `${correctAnswer}`;
+            correctAnswerDisplay.classList.add('fade-in-out');
+            correctAnswerDisplay.style.display = 'block';
             setTimeout(() => {
                 answerInput.classList.remove('shake', 'wrong-focus');
-            }, 500);
+                correctAnswerDisplay.classList.remove('fade-in-out');
+                correctAnswerDisplay.textContent = '';
+                correctAnswerDisplay.style.display = 'none';
+            }, 3000);
         }
     }
 });
