@@ -6,6 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     let timerStop = false;
     let correctAnswers = 0;
     let points = 0;
+    let feedbackTimeout;
 
     const questionContainer = document.getElementById('question-container');
     const questionElement = document.getElementById('question');
@@ -147,9 +148,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function showFeedback(isCorrect, correctAnswer = '') {
+        clearTimeout(feedbackTimeout);
+
+        answerInput.classList.remove('bounce', 'correct-focus', 'shake', 'wrong-focus');
+        correctAnswerDisplay.classList.remove('fade-in-out');
+
         if (isCorrect) {
             answerInput.classList.add('bounce', 'correct-focus');
-            setTimeout(() => {
+            feedbackTimeout = setTimeout(() => {
                 answerInput.classList.remove('bounce', 'correct-focus');
             }, 1000);
         } else {
@@ -157,7 +163,7 @@ document.addEventListener('DOMContentLoaded', () => {
             correctAnswerDisplay.textContent = `${correctAnswer}`;
             correctAnswerDisplay.classList.add('fade-in-out');
             correctAnswerDisplay.style.display = 'block';
-            setTimeout(() => {
+            feedbackTimeout = setTimeout(() => {
                 answerInput.classList.remove('shake', 'wrong-focus');
                 correctAnswerDisplay.classList.remove('fade-in-out');
                 correctAnswerDisplay.textContent = '';
