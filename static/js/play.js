@@ -127,9 +127,14 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function endGame() {
         stopTimer();
-        questionContainer.style.display = 'none';
-        resultContainer.style.display = 'block';
-        resultMessage.textContent = `Game Over! Your Total Points: ${points}. You got ${correctAnswers}/${questions.length} correct.`;
+
+        questionContainer.classList.add('fade-out');
+
+        setTimeout(() => {
+            questionContainer.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultMessage.textContent = `Game Over! Your Total Points: ${points}. You got ${correctAnswers}/${questions.length} correct.`;
+        }, 500);
     }
 
     if (playAgainButton) {
@@ -139,14 +144,27 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function playAgain() {
-        currentQuestionIndex = 0;
-        points = 0;
-        correctAnswers = 0;
-        pointsValueSpan.textContent = points;
-        answerInput.value = '';
-        resultContainer.style.display = 'none';
-        questionContainer.style.display = 'block';
-        startGame();
+
+        resultContainer.classList.add('fade-out');
+
+        setTimeout(() => {
+            currentQuestionIndex = 0;
+            points = 0;
+            correctAnswers = 0;
+            pointsValueSpan.textContent = points;
+            answerInput.value = '';
+            resultContainer.style.display = 'none';
+            questionContainer.style.display = 'block';
+
+            // Reset animations display
+            resultContainer.classList.remove('fade-out', 'fade-in');
+            resultContainer.style.display = 'none';
+            questionContainer.classList.remove('fade-out', 'fade-in');
+            questionContainer.style.display = 'block';
+            questionContainer.classList.add('fade-in');
+
+            startGame();
+        })
     }
 
     function playSound(isCorrect) {
