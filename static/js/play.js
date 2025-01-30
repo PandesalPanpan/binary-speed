@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const resultMessage = document.getElementById('result-message');
     const playAgainButton = document.getElementById('play-again');
     const correctAnswerDisplay = document.getElementById('correct-answer-display');
+    const correctSound = document.getElementById('correct-sound');
+    const wrongSound = document.getElementById('wrong-sound');
 
     const showNextQuestion = () => {
         if (currentQuestionIndex < questions.length) {
@@ -147,11 +149,28 @@ document.addEventListener('DOMContentLoaded', () => {
         startGame();
     }
 
+    function playSound(isCorrect) {
+        if (isCorrect) {
+            correctSound.currentTime = 0;
+            correctSound.play();
+        } else {
+            // nada
+            wrongSound.currentTime = 0;
+            wrongSound.play();
+        }
+    }
+
     function showFeedback(isCorrect, correctAnswer = '') {
         clearTimeout(feedbackTimeout);
 
         answerInput.classList.remove('bounce', 'correct-focus', 'shake', 'wrong-focus');
         correctAnswerDisplay.classList.remove('fade-in-out');
+        correctAnswerDisplay.style.display = 'none';
+        correctAnswerDisplay.style.textContent = '';
+
+        void correctAnswerDisplay.offsetWidth;
+
+        playSound(isCorrect);
 
         if (isCorrect) {
             answerInput.classList.add('bounce', 'correct-focus');

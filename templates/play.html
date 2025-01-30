@@ -29,6 +29,10 @@
         <p id="result-message" class="large-text"></p>
         <button class="btn btn-primary mx-auto" id="play-again">Play Again</button>
     </div>
+    <div id="audio-container" style="display: none;">
+        <audio id="correct-sound" src="{{ url_for('static', filename='audio/correct.mp3') }}"></audio>
+        <audio id="wrong-sound" src="{{ url_for('static', filename='audio/wrong.mp3') }}"></audio>
+    </div>
 
     <script src="{{ url_for('static', filename='js/play.js') }}"></script>
 {% endif %}
