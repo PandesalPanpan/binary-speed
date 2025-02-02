@@ -2,10 +2,13 @@ from flask import Flask, render_template, session, url_for, request, redirect, j
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
 import random
+from faker import Faker
+import uuid
 
 from helpers import apology
 
 app = Flask(__name__)
+fake = Faker()
 
 # Database
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///binary_speed.db'
@@ -33,10 +36,11 @@ def leaderboard():
 @app.route('/set_username', methods=['POST'])
 def set_username():
     # Check if user has form username
-    username = request.form.get("username", "Guest")
+    if 'id' not in session:
+        session['id'] = str(uuid.uuid4())
+        session['username'] = fake.first_name()
     
-    session['username'] = username
-    return redirect('/')
+    return redirect(url_for('play'))
     
 @app.route('/start_game')
 def start_game():
