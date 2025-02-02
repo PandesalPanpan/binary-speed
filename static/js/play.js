@@ -128,13 +128,20 @@ document.addEventListener('DOMContentLoaded', () => {
     function endGame() {
         stopTimer();
 
-        questionContainer.classList.add('fade-out');
-
+        questionContainer.style.display = 'none';
+        resultContainer.style.display = 'block';
+        
+        // Update statistics
+        document.getElementById('final-points').textContent = points;
+        document.getElementById('accuracy').textContent = 
+            `${Math.round((correctAnswers / questions.length) * 100)}%`;
+        
+        resultMessage.textContent = `You got ${correctAnswers} out of ${questions.length} correct!`;
+        
+        // Trigger animation
         setTimeout(() => {
-            questionContainer.style.display = 'none';
-            resultContainer.style.display = 'block';
-            resultMessage.textContent = `Game Over! Your Total Points: ${points}. You got ${correctAnswers}/${questions.length} correct.`;
-        }, 500);
+            resultContainer.classList.add('fade-in');
+        }, 100);
     }
 
     if (playAgainButton) {

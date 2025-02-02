@@ -62,8 +62,22 @@
 
             <div id="result-container" class="card shadow-sm p-5" style="display: none;">
                 <div class="text-center">
-                    <p id="result-message" class="display-6 mb-4"></p>
-                    <button class="btn btn-primary btn-lg px-5 hover-grow" id="play-again">
+                    <h2 class="display-5 mb-4 text-primary">Game Over!</h2>
+                    
+                    <div class="stats-grid mb-4">
+                        <div class="stat-card">
+                            <i class="fas fa-star mb-2 text-warning"></i>
+                            <h3 class="h5 text-primary mb-2">Total Points</h3>
+                            <p class="display-6 mb-0 text-primary" id="final-points"></p>
+                        </div>
+                        <div class="stat-card">
+                            <i class="fas fa-check-circle mb-2 text-success"></i>
+                            <h3 class="h5 text-primary mb-2">Accuracy</h3>
+                            <p class="display-6 mb-0 text-primary" id="accuracy"></p>
+                        </div>
+                    </div>
+            
+                    <button class="btn btn-primary btn-lg px-5 py-3 hover-grow" id="play-again">
                         <i class="fas fa-redo me-2"></i>Play Again
                     </button>
                 </div>
