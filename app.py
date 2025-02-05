@@ -25,6 +25,10 @@ def after_request(response):
     response.headers["Pragma"] = "no-cache"
     return response
 
+@app.errorhandler(404)
+def page_not_found(event):
+    return apology("Page not found", 404)
+
 @app.route("/")
 def play():
     return render_template("play.html")
