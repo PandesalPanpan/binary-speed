@@ -16,6 +16,7 @@
                 </form>
             </div>
         {% else %}
+            <!-- Welcome Layout -->
             <div id="welcome-div" class="text-center">
                 <h1 class="display-4 mb-4 text-primary">Welcome, {{ session['username'] }}!</h1>
                 <button id="start-game" class="btn btn-danger btn-lg px-5 py-3 shadow-sm hover-grow">
@@ -25,6 +26,7 @@
 
             <div id="loading" class="lds-ellipsis my-5"></div>
 
+            <!-- Game Layout -->
             <div id="question-container" class="card shadow-sm p-5" style="display: none;">
                 <div class="text-center">
                     <h2 id="question" class="h4 mb-4 text-secondary"></h2>
@@ -60,6 +62,7 @@
                 </div>
             </div>
 
+            <!-- End Game Layout -->
             <div id="result-container" class="card shadow-sm p-5" style="display: none;">
                 <div class="text-center">
                     <h2 class="display-5 mb-4 text-primary">Game Over!</h2>
@@ -83,6 +86,7 @@
                 </div>
             </div>
 
+            <!-- Sounds -->
             <div id="audio-container" style="display: none;">
                 <audio id="correct-sound" src="{{ url_for('static', filename='audio/correct.mp3') }}"></audio>
                 <audio id="wrong-sound" src="{{ url_for('static', filename='audio/wrong.mp3') }}"></audio>
