@@ -3,6 +3,63 @@
 {% block title %}Leaderboard{% endblock %}
 
 {% block content %}
-<h1>Welcome to My CS50 Final Project</h1>
-<p>This is the leaderboard</p>
+<div class="container-lg py-5">
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-10 col-lg-9">
+            <div class="leaderboard-card p-4">
+                <h2 class="text-center display-5 mb-4">
+                    <i class="fas fa-trophy text-warning me-2"></i>Leaderboard
+                </h2>
+                
+                <div class="table-responsive">
+                    <table class="leaderboard-table">
+                        <thead>
+                            <tr>
+                                <th class="text-center" style="width: 80px;">#</th>
+                                <th class="text-start" style="width: 40%;">Player</th>
+                                <th class="text-end" style="width: 120px;">Points</th>
+                                <th class="text-end" style="width: 120px;">Accuracy</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for score in scores %}
+                            <tr class="leaderboard-row {% if score.is_current_user %}leaderboard-row-current{% endif %}">
+                                <td class="text-center">
+                                    {% if score.rank == 1 %}
+                                        <i class="fas fa-medal text-warning fa-lg">1</i>
+                                    {% elif score.rank == 2 %}
+                                        <i class="fas fa-medal text-secondary fa-lg">2</i>
+                                    {% elif score.rank == 3 %}
+                                        <i class="fas fa-medal medal-bronze fa-lg">3</i>
+                                    {% else %}
+                                        <span class="text-secondary">{{ score.rank }}</span>
+                                    {% endif %}
+                                </td>
+                                <td class="text-start">
+                                    {% if score.is_current_user %}
+                                        <i class="fas fa-user me-2 text-primary"></i>
+                                    {% endif %}
+                                    {{ score.username }}
+                                </td>
+                                <td class="text-end pe-4">{{ score.points }}</td>
+                                <td class="text-end">
+                                    <span class="leaderboard-badge bg-{{ 'success' if score.correct_answers >= 12 else 'warning' if score.correct_answers >= 8 else 'danger' }}">
+                                        {{ score.correct_answers }}/16
+                                    </span>
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="text-center mt-4">
+                    <a href="{{ url_for('play') }}" class="btn btn-primary btn-lg px-5 py-3 hover-grow">
+                        <i class="fas fa-gamepad me-2"></i>Play Again
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

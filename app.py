@@ -58,8 +58,60 @@ def play():
 
 @app.route('/leaderboard')
 def leaderboard():
-    # TODO: Get top 10 and user uuid if exists
-    return render_template("leaderboard.html")
+    try:
+        # Get top 10 scores
+        top_scores = db.session.query(
+            User, Score
+        ).join(Score).order_by(
+            Score.points.desc()
+        ).limit(10).all()
+
+        # Initialize scores list
+        scores_list = []
+        user_in_top_10 = False
+        user_score = None
+        
+        # Process top 10 scores
+        for rank, (user, score) in enumerate(top_scores, 1):
+            scores_list.append({
+                'rank': rank,
+                'username': user.username,
+                'points': score.points,
+                'correct_answers': score.correct_answers,
+                'is_current_user': user.session_id == session.get('session_id', None)
+            })
+            if user.session_id == session.get('session_id', None):
+                user_in_top_10 = True
+
+        # If user is logged in but not in top 10, get their score
+        if 'session_id' in session and not user_in_top_10:
+            user = User.query.filter_by(session_id=session['session_id']).first()
+            if user and user.score:
+                # Calculate user's rank
+                higher_scores = Score.query.filter(
+                    Score.points > user.score.points
+                ).count()
+                user_rank = higher_scores + 1
+                
+                # Add user's score to list
+                user_score = {
+                    'rank': user_rank,
+                    'username': user.username,
+                    'points': user.score.points,
+                    'correct_answers': user.score.correct_answers,
+                    'is_current_user': True
+                }
+                scores_list.append(user_score)
+
+        return render_template(
+            'leaderboard.html',
+            scores=scores_list,
+            user_logged_in='session_id' in session
+        )
+        
+    except Exception as e:
+        print(f"Error fetching leaderboard: {str(e)}")
+        return apology("Error loading leaderboard")
 
 @app.route('/set_username', methods=['POST'])
 def set_username():
@@ -80,7 +132,6 @@ def start_game():
 
 @app.route('/submit_score', methods=['POST'])
 def submit_score():
-    print("Submit Score played")
     try:
         data = request.json
         

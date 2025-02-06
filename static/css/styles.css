@@ -378,3 +378,55 @@ footer {
   color: var(--text-primary);
 }
 
+.leaderboard-table {
+  color: var(--text-primary);
+  background: var(--bg-card);
+  width: 100%;
+  margin-bottom: 1.5rem;
+}
+
+.leaderboard-table thead th {
+  border-bottom: 2px solid var(--bg-input);
+  color: var(--text-secondary);
+  font-weight: 500;
+  padding: 1rem;
+}
+
+.leaderboard-table td {
+  border-color: var(--bg-input);
+  vertical-align: middle;
+  padding: 1rem;
+}
+
+.leaderboard-row {
+  transition: all 0.2s ease;
+}
+
+.leaderboard-row:hover {
+  background-color: var(--bg-input);
+}
+
+.leaderboard-row-current {
+  background-color: rgba(77, 121, 255, 0.1);
+}
+
+.leaderboard-row-current:hover {
+  background-color: rgba(77, 121, 255, 0.15);
+}
+
+.medal-bronze {
+  color: #cd7f32;
+}
+
+.leaderboard-badge {
+  font-weight: 500;
+  padding: 0.5em 0.75em;
+  border-radius: 4px;
+}
+
+.leaderboard-card {
+  background-color: var(--bg-card);
+  border: none;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+}
