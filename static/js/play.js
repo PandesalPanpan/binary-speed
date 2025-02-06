@@ -137,7 +137,14 @@ document.addEventListener('DOMContentLoaded', () => {
             `${Math.round((correctAnswers / questions.length) * 100)}%`;
                 
         document.getElementById('submit-score').addEventListener('click', function() {
-            // TODO: Add loading for waiting feedback success/fail
+            const notification = document.getElementById('notification');
+            const notificationText = document.getElementById('notification-text');
+
+            notificationText.innerHTML = `
+                <i class="fas fa-circle-notch fa-spin"></i>
+                Submitting score...
+                `;
+            notification.classList.add('show');
             fetch('/submit_score', {
                 method: 'POST',
                 headers: {
@@ -148,7 +155,42 @@ document.addEventListener('DOMContentLoaded', () => {
                     correctAnswers: correctAnswers,
                 })
             })
-            .then(response => response.json());
+            .then(response => response.json())
+            .then(data => {
+                if (data.status === 'success') {
+                    notification.classList.add('sucess');
+                    notificationText.innerHTML = `
+                    <div class="d-flex align-items center">
+                        <i class="fas fa-check-circle text-success fa-lg me-3"></i>
+                        <div>
+                            <div class="fw-bold">Sucess!</div>
+                            <small>Score submitted to leaderboard</small>
+                        </div>
+                    </div>
+                    `;
+                    setTimeout(() => {
+                        notification.classList.remove('show', 'success')
+                        //window.location.href = '/leaderboard';
+                    }, 3000);
+                } else {
+                    throw new Error(data.message || 'Failed to submit score');
+                }
+            })
+            .catch(error => {
+                notification.classList.add('error');
+                notificationText.innerHTML = `
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-exclamation-circle text-danger fa-lg me-3"></i>
+                    <div>
+                        <div class="fw-bold">Error</div>
+                        <small>${error.message}</small>
+                    </div>
+                </div>
+                `;
+                setTimeout(() => {
+                    notification.classList.remove('show', 'error');
+                }, 3000);
+            });
         });
 
         // Trigger animation

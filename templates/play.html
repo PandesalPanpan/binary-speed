@@ -16,6 +16,12 @@
                 </form>
             </div>
         {% else %}
+            <div id="notification" class="notification">
+                <div class="notification-content">
+                    <span id="notification-text"></span>
+                </div>
+            </div>
+
             <!-- Welcome Layout -->
             <div id="welcome-div" class="text-center">
                 <h1 class="display-4 mb-4 text-primary">Welcome, {{ session['username'] }}!</h1>
@@ -90,6 +96,7 @@
                     </div>
                 </div>
             </div>
+
 
             <!-- Sounds -->
             <div id="audio-container" style="display: none;">

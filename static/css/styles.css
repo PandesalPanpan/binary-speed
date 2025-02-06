@@ -343,3 +343,38 @@ footer {
   transform: translateY(-5px);
 }
 
+.notification {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  padding: 1rem 1.5rem;
+  background: var(--bg-card);
+  border-radius: 8px;
+  box-shadow: 0 4px 12px var(--shadow-color);
+  transform: translateX(150%);
+  transition: all  0.3s ease;
+  border-left: 4px solid transparent;
+  min-width: 300px;
+}
+
+.notification.sucess {
+  border-left-color: var(--accent-success);
+  background: rgba(46, 204, 113, 0.1);
+}
+
+.notification.error {
+  border-left-color: var(--accent-danger);
+  background: rgba(255, 77, 77, 0.1);
+}
+
+.notification.show {
+  transform: translateX(0);
+}
+
+.notification-content {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--text-primary);
+}
+
