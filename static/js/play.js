@@ -135,9 +135,25 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('final-points').textContent = points;
         document.getElementById('accuracy').textContent = 
             `${Math.round((correctAnswers / questions.length) * 100)}%`;
-        
-        resultMessage.textContent = `You got ${correctAnswers} out of ${questions.length} correct!`;
-        
+                
+        document.getElementById('submit-score').addEventListener('click', function() {
+            console.log("Submit Score button pressed!");
+            fetch('/submit_score', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    points: points,
+                    correctAnswers: correctAnswers,
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                window.location.href = '/leaderboard';
+            });
+        });
+
         // Trigger animation
         setTimeout(() => {
             resultContainer.classList.add('fade-in');
