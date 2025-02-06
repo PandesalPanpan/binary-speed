@@ -149,7 +149,7 @@ def submit_score():
         # Create or update score
         if user.score:
             user.score.points = data['points']
-            user.score.corrent_answers = data['correctAnswers']
+            user.score.correct_answers = data['correctAnswers']
                 
         else:
             # Create new score
