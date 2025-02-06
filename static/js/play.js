@@ -137,7 +137,7 @@ document.addEventListener('DOMContentLoaded', () => {
             `${Math.round((correctAnswers / questions.length) * 100)}%`;
                 
         document.getElementById('submit-score').addEventListener('click', function() {
-            console.log("Submit Score button pressed!");
+            // TODO: Add loading for waiting feedback success/fail
             fetch('/submit_score', {
                 method: 'POST',
                 headers: {
@@ -148,10 +148,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     correctAnswers: correctAnswers,
                 })
             })
-            .then(response => response.json())
-            .then(data => {
-                window.location.href = '/leaderboard';
-            });
+            .then(response => response.json());
         });
 
         // Trigger animation
