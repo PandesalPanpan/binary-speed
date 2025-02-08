@@ -1,3 +1,5 @@
+from datetime import datetime, timedelta
+import click
 from flask import Flask, render_template, session, url_for, request, redirect, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from flask_session import Session
@@ -35,6 +37,7 @@ class Score(db.Model):
     points: Mapped[int] = mapped_column(nullable=False)
     correct_answers: Mapped[int] = mapped_column(nullable=False)
     user_id: Mapped[int] = mapped_column(ForeignKey("user.id"), nullable=False)
+    created_at: Mapped[datetime] = mapped_column(default=datetime.now())
     user: Mapped["User"] = relationship("User", back_populates="score")
 
 with app.app_context():
@@ -168,3 +171,48 @@ def submit_score():
         db.session.rollback()
         print("Exception Triggered")
         return jsonify({'status': 'error', 'message': str(e)}, 500)
+    
+@app.cli.command("cleanup-scores")
+@click.option('--days', type=int, help='Delete scores older than X days')
+@click.option('--weeks', type=int, help='Delete scores older than X weeks')
+@click.option('--months', type=int, help='Delete scores older than X months')
+@click.option('--all', is_flag=True, help='Delete all scores and users')
+def cleanup_scores(days, weeks, months, all):
+    """Clean up scores and their associated users"""
+    try:
+        if all:
+            with app.app_context():
+                num_scores = Score.query.delete()
+                num_users = User.query.delete()
+                db.session.commit()
+                print(f"Full cleanup successful: Removed all {num_scores} scores and {num_users} users")
+                return
+                
+        if sum(1 for x in [days, weeks, months] if x is not None) > 1:
+            print("Error: Please specify only one time unit (days, weeks, or months)")
+            return
+        
+        if days:
+            cutoff_date = datetime.now() - timedelta(days=days)
+        elif weeks:
+            cutoff_date = datetime.now() - timedelta(weeks=weeks)
+        elif months:
+            cutoff_date = datetime.now() - timedelta(months=months)
+        else:
+            print("Error: Please specify a time period (--days, --weeks, or --months)")
+            return
+        
+        with app.app_context():
+            old_scores = Score.query.filter(Score.created_at < cutoff_date).all()
+            user_ids = [score.user_id for score in old_scores]
+            
+            num_scores = Score.query.filter(Score.created_at < cutoff_date).delete()
+            
+            num_users = User.query.filter(User.id.in_(user_ids)).delete()
+            
+            db.session.commit()
+            print(f"Cleanup successful: Removed {num_scores} scores and {num_users} users older than {cutoff_date}")
+            
+    except Exception as e:
+        db.session.rollback()
+        print(f"Cleanup failed: {str(e)}")
