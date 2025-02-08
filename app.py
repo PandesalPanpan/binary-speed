@@ -138,6 +138,16 @@ def submit_score():
     try:
         data = request.json
         
+        points = data['points']
+        correct_answers = data['correctAnswers']
+        
+        # Check for invalid scores
+        if points > 16000 or (points == 16000 and correct_answers < 16):
+            return jsonify({
+                'status': 'error', 
+                'message': 'Invalid score detected'
+            }), 400
+        
         # Check if user already is on the database
         user = User.query.filter_by(session_id=session['session_id']).first()
         if not user:
